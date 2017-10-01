@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var expressJwt = require('express-jwt');
 var config = require('config.json');
 
+app.set('port',3000);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -26,7 +27,15 @@ app.get('/', function (req, res) {
     return res.redirect('/app');
 });
 
-// start server
-var server = app.listen(3000, function () {
-    console.log('Server listening at http://' + server.address().address + ':' + server.address().port);
+//making database
+var db = 'mongodb://localhost/MEAN';
+mongoose.connect(db,{ useMongoClient: true });
+//start server
+
+var database = mongoose.connection;
+database.on('open',function () {
+    console.log("database is connected");
+    app.listen(app.get('port'), function () {
+        console.log('Server listening at http://' + server.address().address + ':' + server.address().port);
+    });
 });
